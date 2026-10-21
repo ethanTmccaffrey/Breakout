@@ -3,7 +3,7 @@
 // implemented powerups
 enum POWERUPS
 {
-    bigPaddle,
+    starPower,
     smallPaddle,
     fastBall,
     slowBall,

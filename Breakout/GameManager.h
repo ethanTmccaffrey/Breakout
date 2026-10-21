@@ -13,11 +13,13 @@
 class GameManager {
 public:
     GameManager(sf::RenderWindow* window);
+    ~GameManager();
     void initialize();
     void update(float dt);
     void loseLife();
     void render();
     void levelComplete();
+    void restart();
     void powerupEffect(POWERUPS pu, float t);
 
     Paddle* getPaddle() const;
@@ -35,6 +37,8 @@ private:
     int _lives;
     bool _levelComplete;
     std::pair<POWERUPS, float> _powerupInEffect;
+    std::vector<sf::Keyboard::Key> _heldKeys; //movement keys in the order they were pressed//
+    bool _debugSpawnHeld = false;
 
     sf::Font _font;
     sf::Text _masterText;
@@ -46,6 +50,10 @@ private:
     PowerupManager* _powerupManager;
     MessagingSystem* _messagingSystem;
     UI* _ui;
+
+    sf::Vector2i getSnakeInput();
+    void cleanup();
+    
 
     static constexpr float PAUSE_TIME_BUFFER = 0.5f;
     static constexpr float POWERUP_FREQUENCY = 7.5f;    // time between minimum powerup spawn

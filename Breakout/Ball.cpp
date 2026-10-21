@@ -1,5 +1,7 @@
 #include "Ball.h"
 #include "GameManager.h" // avoid cicular dependencies
+#include <cmath>
+#include <algorithm>
 
 Ball::Ball(sf::RenderWindow* window, float velocity, GameManager* gameManager)
     : _window(window), _velocity(velocity), _gameManager(gameManager),
@@ -67,16 +69,29 @@ void Ball::update(float dt)
         _gameManager->loseLife();
     }
 
-    // collision with paddle
-    if (_sprite.getGlobalBounds().intersects(_gameManager->getPaddle()->getBounds()))
+    // collision with the snake
+    sf::FloatRect segment;
+    if (_gameManager->getPaddle()->checkCollision(_sprite.getGlobalBounds(), &segment))
     {
-        _direction.y *= -1; // Bounce vertically
+        //Always knock the ball upwards//
+        _direction.y = -std::abs(_direction.y);
 
-        float paddlePositionProportion = (_sprite.getPosition().x - _gameManager->getPaddle()->getBounds().left) / _gameManager->getPaddle()->getBounds().width;
-        _direction.x = paddlePositionProportion * 2.0f - 1.0f;
+        //nudge the angle based on where the ball hit the segment//
+        float ballCentreX = _sprite.getPosition().x + RADIUS;
+        float segmentCentreX = segment.left + segment.width / 2.0f;
+        float offset = (ballCentreX - segmentCentreX) / (segment.width / 2.0f);
+        _direction.x += offset * 0.5f;
 
-        // Adjust position to avoid getting stuck inside the paddle
-        _sprite.setPosition(_sprite.getPosition().x, _gameManager->getPaddle()->getBounds().top - 2 * RADIUS);
+        //Moving the snake sideways as it hits the ball pushes the ball that way//
+        _direction.x += _gameManager->getPaddle()->getInput().x * 0.4f;
+
+        _direction.x = std::clamp(_direction.x, -1.0f, 1.0f);
+
+        //never let the ball go fully vertical//
+        if (std::abs(_direction.x) < MIN_HORIZONTAL) _direction.x = (_direction.x < 0.0f) ? -MIN_HORIZONTAL : MIN_HORIZONTAL;
+
+        //Move ball above the segment so it doesnt collide again next frame//
+        _sprite.setPosition(_sprite.getPosition().x, segment.top - 2 * RADIUS);
     }
 
     // collision with bricks

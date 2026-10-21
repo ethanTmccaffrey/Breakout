@@ -35,10 +35,10 @@ void UI::updatePowerupText(std::pair<POWERUPS, float> powerup)
 
 	switch (powerup.first)
 	{
-	case bigPaddle:
+	case starPower:
 		oss << std::fixed << std::setprecision(2) << powerup.second;
-		_powerupText.setString("big " + oss.str());
-		_powerupText.setFillColor(paddleEffectsColour);
+		_powerupText.setString("star " + oss.str());
+		_powerupText.setFillColor(sf::Color::Yellow);
 		break;
 	case smallPaddle:
 		oss << std::fixed << std::setprecision(2) << powerup.second;
@@ -75,7 +75,7 @@ void UI::lifeLost(int lives)
 void UI::render()
 {
 	_window->draw(_powerupText);
-	for (sf::CircleShape life : _lives)
+	for (const sf::CircleShape& life : _lives)
 	{
 		_window->draw(life);
 	}

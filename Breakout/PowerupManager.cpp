@@ -27,11 +27,9 @@ void PowerupManager::update(float dt)
         }
     }
 
-
+    checkCollision();
     for (auto it = _powerups.begin(); it != _powerups.end(); )
-    {
-        checkCollision();
-        
+    {   
         // Delete powerups queued for removal
         (*it)->update(dt);
         if (!(*it)->isAlive())
@@ -56,6 +54,10 @@ void PowerupManager::render()
 
 void PowerupManager::spawnPowerup()
 {
+    spawnPowerup(rand() % 5);
+}
+void PowerupManager::spawnPowerup(int type)
+{
 
     std::uniform_real_distribution<float> xDist(
         _window->getSize().x * 0.05f,
@@ -64,7 +66,7 @@ void PowerupManager::spawnPowerup()
 
     float spawnX = xDist(_rng);
 
-    switch (rand() % 5)
+    switch (type)
     {
     case 0:
         _powerups.push_back(new PowerupBigPaddle(_window, _paddle, _ball, spawnX));

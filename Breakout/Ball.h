@@ -27,7 +27,8 @@ private:
     GameManager* _gameManager;  // Reference to the GameManager
 
 
-    static constexpr float RADIUS = 10.0f;      
-    static constexpr float VELOCITY = 350.0f;   // for reference.
+    static constexpr float RADIUS = 10.0f;
+    static constexpr float MIN_HORIZONTAL = 0.25f; //stops the ball bouncing straight up//
+    static constexpr float VELOCITY = 200.0f;   // for reference.
 };
 

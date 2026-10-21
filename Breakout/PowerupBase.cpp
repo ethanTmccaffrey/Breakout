@@ -56,7 +56,7 @@ void PowerupBase::render()
 
 bool PowerupBase::checkCollisionWithPaddle()
 {
-    if (_sprite.getGlobalBounds().intersects(_paddle->getBounds()))
+    if (_paddle->checkCollision(_sprite.getGlobalBounds()))
     {
         _isAlive = false;
         return true;
